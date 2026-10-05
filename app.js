@@ -27,7 +27,6 @@ import {
    FIREBASE CONFIG
 ========================= */
 
-
 const firebaseConfig = {
 
     apiKey:
@@ -72,7 +71,6 @@ const db =
    VARIABLES
 ========================= */
 
-
 let currentDate =
     new Date();
 
@@ -93,7 +91,6 @@ let currentUser =
 /* =========================
    LOGIN
 ========================= */
-
 
 async function login() {
 
@@ -145,7 +142,6 @@ async function login() {
 /* =========================
    REGISTER
 ========================= */
-
 
 async function register() {
 
@@ -234,7 +230,6 @@ async function register() {
    LOGOUT
 ========================= */
 
-
 async function logout() {
 
     await signOut(auth);
@@ -246,7 +241,6 @@ async function logout() {
 /* =========================
    AUTH STATE
 ========================= */
-
 
 onAuthStateChanged(
     auth,
@@ -315,7 +309,6 @@ onAuthStateChanged(
    LOAD OT
 ========================= */
 
-
 async function loadOT() {
 
     if (!currentUser)
@@ -356,18 +349,15 @@ async function loadOT() {
 
 
 /* =========================
-   SAVE OT
+   SAVE OT / NOTE
 ========================= */
-
 
 async function saveOT() {
 
-    const hours =
-        parseFloat(
-            document.getElementById(
-                "otHours"
-            ).value
-        );
+    const hoursInput =
+        document.getElementById(
+            "otHours"
+        ).value.trim();
 
 
     const note =
@@ -376,19 +366,54 @@ async function saveOT() {
         ).value.trim();
 
 
+    const hours =
+        hoursInput === ""
+            ? 0
+            : parseFloat(hoursInput);
+
+
+
+    /* =========================
+       CHECK HOURS
+    ========================= */
+
     if (
         isNaN(hours) ||
-        hours <= 0
+        hours < 0
     ) {
 
         alert(
-            "กรุณาใส่จำนวนชั่วโมง OT"
+            "จำนวนชั่วโมงไม่ถูกต้อง"
         );
 
         return;
 
     }
 
+
+
+    /* =========================
+       CHECK EMPTY
+    ========================= */
+
+    if (
+        hours === 0 &&
+        note === ""
+    ) {
+
+        alert(
+            "กรุณาใส่จำนวนชั่วโมง OT หรือ Note"
+        );
+
+        return;
+
+    }
+
+
+
+    /* =========================
+       CHECK LOGIN
+    ========================= */
 
     if (!currentUser) {
 
@@ -434,6 +459,11 @@ async function saveOT() {
         );
 
 
+
+        /* =========================
+           UPDATE LOCAL DATA
+        ========================= */
+
         otData[
             selectedDate
         ] = {
@@ -450,8 +480,18 @@ async function saveOT() {
         };
 
 
+
+        /* =========================
+           REFRESH CALENDAR
+        ========================= */
+
         renderCalendar();
 
+
+
+        /* =========================
+           CLOSE MODAL
+        ========================= */
 
         const modal =
             bootstrap.Modal.getInstance(
@@ -469,7 +509,7 @@ async function saveOT() {
         console.error(error);
 
         alert(
-            "บันทึก OT ไม่สำเร็จ"
+            "บันทึกข้อมูลไม่สำเร็จ"
         );
 
     }
@@ -479,9 +519,8 @@ async function saveOT() {
 
 
 /* =========================
-   DELETE OT
+   DELETE OT / NOTE
 ========================= */
-
 
 async function deleteCurrentOT() {
 
@@ -492,7 +531,7 @@ async function deleteCurrentOT() {
     if (!otData[selectedDate]) {
 
         alert(
-            "วันนี้ยังไม่มีข้อมูล OT"
+            "วันนี้ยังไม่มีข้อมูล"
         );
 
         return;
@@ -502,7 +541,7 @@ async function deleteCurrentOT() {
 
     const confirmDelete =
         confirm(
-            "ต้องการลบ OT วันนี้หรือไม่?"
+            "ต้องการลบข้อมูลวันนี้หรือไม่?"
         );
 
 
@@ -529,7 +568,9 @@ async function deleteCurrentOT() {
         ];
 
 
+
         renderCalendar();
+
 
 
         const modal =
@@ -548,7 +589,7 @@ async function deleteCurrentOT() {
         console.error(error);
 
         alert(
-            "ลบ OT ไม่สำเร็จ"
+            "ลบข้อมูลไม่สำเร็จ"
         );
 
     }
@@ -560,7 +601,6 @@ async function deleteCurrentOT() {
 /* =========================
    CALENDAR
 ========================= */
-
 
 function renderCalendar() {
 
@@ -581,6 +621,7 @@ function renderCalendar() {
         currentDate.getMonth();
 
 
+
     const monthNames = [
 
         "มกราคม",
@@ -597,6 +638,7 @@ function renderCalendar() {
         "ธันวาคม"
 
     ];
+
 
 
     document.getElementById(
@@ -633,6 +675,10 @@ function renderCalendar() {
 
 
 
+    /* =========================
+       EMPTY DAYS
+    ========================= */
+
     for (
         let i = 0;
         i < startDay;
@@ -661,6 +707,10 @@ function renderCalendar() {
 
 
 
+    /* =========================
+       DAYS
+    ========================= */
+
     for (
         let day = 1;
         day <= daysInMonth;
@@ -688,6 +738,10 @@ function renderCalendar() {
 
 
 
+        /* =========================
+           DAY NUMBER
+        ========================= */
+
         const number =
             document.createElement(
                 "div"
@@ -707,6 +761,10 @@ function renderCalendar() {
         );
 
 
+
+        /* =========================
+           TODAY
+        ========================= */
 
         const today =
             new Date();
@@ -733,6 +791,10 @@ function renderCalendar() {
 
 
 
+        /* =========================
+           OT / NOTE
+        ========================= */
+
         if (
             otData[dateKey]
         ) {
@@ -747,12 +809,53 @@ function renderCalendar() {
                 "ot";
 
 
-            ot.textContent =
-                "OT " +
+            const hours =
+                Number(
+                    otData[
+                        dateKey
+                    ].hours
+                );
+
+
+            const note =
                 otData[
                     dateKey
-                ].hours +
-                " ชม.";
+                ].note ||
+                "";
+
+
+
+            /* =========================
+               OT
+            ========================= */
+
+            if (
+                hours > 0
+            ) {
+
+                ot.textContent =
+                    "OT " +
+                    hours +
+                    " ชม.";
+
+            }
+
+
+
+            /* =========================
+               NOTE ONLY
+            ========================= */
+
+            else if (
+                note !== ""
+            ) {
+
+                ot.textContent =
+                    "📝 " +
+                    note;
+
+            }
+
 
 
             div.appendChild(
@@ -762,6 +865,10 @@ function renderCalendar() {
         }
 
 
+
+        /* =========================
+           CLICK DAY
+        ========================= */
 
         div.onclick =
             function () {
@@ -789,9 +896,8 @@ function renderCalendar() {
 
 
 /* =========================
-   OPEN OT
+   OPEN OT MODAL
 ========================= */
-
 
 function openOTModal(
     dateKey
@@ -801,11 +907,13 @@ function openOTModal(
         dateKey;
 
 
+
     const date =
         new Date(
             dateKey +
             "T00:00:00"
         );
+
 
 
     const day =
@@ -820,6 +928,7 @@ function openOTModal(
         date.getFullYear() + 543;
 
 
+
     document.getElementById(
         "selectedDate"
     ).textContent =
@@ -828,20 +937,31 @@ function openOTModal(
 
 
 
+    /* =========================
+       LOAD HOURS
+    ========================= */
+
     document.getElementById(
         "otHours"
     ).value =
 
-        otData[dateKey]?.hours ||
-        "";
+        otData[
+            dateKey
+        ]?.hours || "";
 
+
+
+    /* =========================
+       LOAD NOTE
+    ========================= */
 
     document.getElementById(
         "otNote"
     ).value =
 
-        otData[dateKey]?.note ||
-        "";
+        otData[
+            dateKey
+        ]?.note || "";
 
 
 
@@ -863,7 +983,6 @@ function openOTModal(
    SUMMARY
 ========================= */
 
-
 function updateSummary() {
 
     const year =
@@ -874,9 +993,12 @@ function updateSummary() {
         currentDate.getMonth();
 
 
-    let total = 0;
+    let total =
+        0;
 
-    let days = 0;
+
+    let days =
+        0;
 
 
 
@@ -891,6 +1013,7 @@ function updateSummary() {
             );
 
 
+
         if (
 
             d.getFullYear() ===
@@ -901,7 +1024,7 @@ function updateSummary() {
 
         ) {
 
-            total +=
+            const hours =
                 Number(
                     otData[
                         date
@@ -909,7 +1032,27 @@ function updateSummary() {
                 );
 
 
-            days++;
+
+            /* =========================
+               TOTAL HOURS
+            ========================= */
+
+            total +=
+                hours;
+
+
+
+            /* =========================
+               OT DAYS
+            ========================= */
+
+            if (
+                hours > 0
+            ) {
+
+                days++;
+
+            }
 
         }
 
@@ -940,7 +1083,6 @@ function updateSummary() {
    MONTH
 ========================= */
 
-
 function previousMonth() {
 
     currentDate.setMonth(
@@ -951,6 +1093,7 @@ function previousMonth() {
     renderCalendar();
 
 }
+
 
 
 function nextMonth() {
@@ -970,7 +1113,6 @@ function nextMonth() {
    LOGIN / REGISTER PAGE
 ========================= */
 
-
 function showRegister() {
 
     document.getElementById(
@@ -983,6 +1125,7 @@ function showRegister() {
     ).style.display = "flex";
 
 }
+
 
 
 function showLogin() {
@@ -1004,7 +1147,6 @@ function showLogin() {
    ERROR
 ========================= */
 
-
 function showLoginError(
     message
 ) {
@@ -1023,6 +1165,7 @@ function showLoginError(
         "block";
 
 }
+
 
 
 function showRegisterError(
@@ -1049,7 +1192,6 @@ function showRegisterError(
 /* =========================
    FIREBASE ERROR
 ========================= */
-
 
 function getFirebaseError(
     error
@@ -1108,7 +1250,6 @@ function getFirebaseError(
 /* =========================
    GLOBAL FUNCTIONS
 ========================= */
-
 
 window.login =
     login;

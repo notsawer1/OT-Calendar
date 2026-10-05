@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My OT Calendar</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- ================= LOGIN PAGE ================= -->
+    <div id="loginPage">
+      <div class="login-box">
+        <div class="login-icon">🕐</div>
+        <h1>My OT Calendar</h1>
+        <p>ระบบบันทึกเวลาทำ OT</p>
+        <div
+          id="loginError"
+          class="alert alert-danger"
+          style="display: none"
+        ></div>
+        <input
+          type="email"
+          id="loginEmail"
+          class="form-control mb-3"
+          placeholder="Email"
+        />
+        <input
+          type="password"
+          id="loginPassword"
+          class="form-control mb-3"
+          placeholder="Password"
+        />
+        <button class="btn btn-primary w-100 mb-3" onclick="login()">
+          เข้าสู่ระบบ
+        </button>
+        <button
+          class="btn btn-outline-secondary w-100"
+          onclick="showRegister()"
+        >
+          สมัครสมาชิก
+        </button>
+      </div>
+    </div>
+    <!-- ================= REGISTER PAGE ================= -->
+    <div id="registerPage" style="display: none">
+      <div class="login-box">
+        <div class="login-icon">📝</div>
+        <h1>สมัครสมาชิก</h1>
+        <p>สร้างบัญชีสำหรับบันทึก OT</p>
+        <div
+          id="registerError"
+          class="alert alert-danger"
+          style="display: none"
+        ></div>
+        <input
+          type="email"
+          id="registerEmail"
+          class="form-control mb-3"
+          placeholder="Email"
+        />
+        <input
+          type="password"
+          id="registerPassword"
+          class="form-control mb-3"
+          placeholder="Password"
+        />
+        <input
+          type="password"
+          id="registerPasswordConfirm"
+          class="form-control mb-3"
+          placeholder="ยืนยัน Password"
+        />
+        <button class="btn btn-primary w-100 mb-3" onclick="register()">
+          สมัครสมาชิก
+        </button>
+        <button class="btn btn-outline-secondary w-100" onclick="showLogin()">
+          กลับไป Login
+        </button>
+      </div>
+    </div>
+    <!-- ================= MAIN APP ================= -->
+    <div id="appPage" style="display: none">
+      <div class="container py-4">
+        <!-- HEADER -->
+        <div class="app-header">
+          <div>
+            <h1>🕐 My OT Calendar</h1>
+            <p id="userEmail"></p>
+          </div>
+          <button class="btn btn-outline-danger" onclick="logout()">
+            Logout
+          </button>
+        </div>
+        <!-- SUMMARY -->
+        <div class="summary">
+          <div class="summary-box">
+            <span> OT เดือนนี้ </span> <strong id="totalOT"> 0 ชั่วโมง </strong>
+          </div>
+          <div class="summary-box">
+            <span> จำนวนวันที่ OT </span> <strong id="otDays"> 0 วัน </strong>
+          </div>
+        </div>
+        <!-- CALENDAR -->
+        <div class="calendar-card">
+          <div class="calendar-header">
+            <button onclick="previousMonth()">‹</button>
+            <h2 id="monthYear"></h2>
+            <button onclick="nextMonth()">›</button>
+          </div>
+          <div class="weekdays">
+            <div>จ</div>
+            <div>อ</div>
+            <div>พ</div>
+            <div>พฤ</div>
+            <div>ศ</div>
+            <div>ส</div>
+            <div>อา</div>
+          </div>
+          <div id="calendar" class="calendar"></div>
+        </div>
+      </div>
+    </div>
+    <!-- ================= OT MODAL ================= -->
+    <div class="modal fade" id="otModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="selectedDate">เพิ่ม OT</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <label class="form-label"> จำนวน OT </label>
+            <input
+              type="number"
+              id="otHours"
+              class="form-control"
+              placeholder="จำนวนชั่วโมง"
+              min="0"
+              step="0.5"
+            />
+            <label class="form-label mt-3"> หมายเหตุ </label>
+            <textarea
+              id="otNote"
+              class="form-control"
+              rows="3"
+              placeholder="เช่น ทำงานส่งงาน"
+            >
+            </textarea>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-danger"
+              onclick="deleteCurrentOT()"
+            >
+              ลบ OT
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              ยกเลิก
+            </button>
+            <button type="button" class="btn btn-primary" onclick="saveOT()">
+              บันทึก OT
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

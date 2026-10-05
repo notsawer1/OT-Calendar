@@ -23,14 +23,15 @@ import {
 /* ================= FIREBASE ================= */
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCXDBm3Wi37D9gUEvt1crSAKbSOXwHWRk",
-    authDomain: "my-ot-calendar.firebaseapp.com",
-    projectId: "my-ot-calendar",
-    storageBucket: "my-ot-calendar.firebasestorage.app",
-    messagingSenderId: "631206414956",
-    appId: "1:631206414956:web:1bf04374ec378190c56649",
-    measurementId: "G-1K8V7K24GR"
+  apiKey: "AIzaSyCXDBm3WiI37D9gUEvt1crSAKbSOXwHWRk",
+  authDomain: "my-ot-calendar.firebaseapp.com",
+  projectId: "my-ot-calendar",
+  storageBucket: "my-ot-calendar.firebasestorage.app",
+  messagingSenderId: "631206414956",
+  appId: "1:631206414956:web:1bf04374ec378190c56649",
+  measurementId: "G-1K8V7K24GR"
 };
+
 
 
 const app = initializeApp(firebaseConfig);

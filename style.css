@@ -4,7 +4,7 @@ body {
 }
 
 
-/* LOGIN */
+/* ================= LOGIN ================= */
 
 #loginPage,
 #registerPage {
@@ -22,6 +22,7 @@ body {
 
 .login-box {
     width: 100%;
+
     max-width: 400px;
 
     background: white;
@@ -31,7 +32,7 @@ body {
     border-radius: 20px;
 
     box-shadow:
-        0 5px 25px rgba(0,0,0,0.08);
+        0 5px 25px rgba(0, 0, 0, 0.08);
 
     text-align: center;
 }
@@ -58,8 +59,7 @@ body {
 }
 
 
-
-/* APP HEADER */
+/* ================= HEADER ================= */
 
 .app-header {
     display: flex;
@@ -68,7 +68,7 @@ body {
 
     align-items: center;
 
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
 
@@ -86,8 +86,294 @@ body {
 }
 
 
+/* ================= NAVIGATION ================= */
 
-/* SUMMARY */
+.navigation {
+    display: flex;
+
+    gap: 10px;
+
+    margin-bottom: 25px;
+}
+
+
+.nav-button {
+    border: none;
+
+    background: white;
+
+    padding: 10px 20px;
+
+    border-radius: 10px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.05);
+
+    transition: 0.2s;
+}
+
+
+.nav-button:hover {
+    background: #f0f4ff;
+}
+
+
+.nav-button.active {
+    background: #0d6efd;
+
+    color: white;
+}
+
+
+/* ================= DASHBOARD ================= */
+
+.dashboard-title {
+    margin-bottom: 20px;
+}
+
+
+.dashboard-title h2 {
+    margin: 0;
+
+    font-weight: bold;
+}
+
+
+.dashboard-title p {
+    color: #777;
+
+    margin: 5px 0 0;
+}
+
+
+.dashboard-summary {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 15px;
+
+    margin-bottom: 20px;
+}
+
+
+.dashboard-box {
+    background: white;
+
+    padding: 20px;
+
+    border-radius: 15px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    box-shadow:
+        0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+
+.dashboard-box span {
+    display: block;
+
+    color: #777;
+
+    font-size: 14px;
+
+    margin-bottom: 5px;
+}
+
+
+.dashboard-box strong {
+    display: block;
+
+    font-size: 22px;
+}
+
+
+.dashboard-icon {
+    font-size: 30px;
+}
+
+
+/* ================= DASHBOARD CARD ================= */
+
+.dashboard-card {
+    background: white;
+
+    border-radius: 15px;
+
+    padding: 20px;
+
+    margin-bottom: 20px;
+
+    box-shadow:
+        0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+
+.dashboard-card-header {
+    margin-bottom: 20px;
+}
+
+
+.dashboard-card-header h3 {
+    margin: 0;
+
+    font-size: 20px;
+
+    font-weight: bold;
+}
+
+
+.dashboard-card-header p {
+    color: #777;
+
+    margin: 5px 0 0;
+}
+
+
+/* ================= CHART ================= */
+
+.ot-chart {
+    display: flex;
+
+    align-items: flex-end;
+
+    gap: 8px;
+
+    height: 230px;
+
+    overflow-x: auto;
+
+    padding: 10px 5px;
+}
+
+
+.chart-item {
+    min-width: 32px;
+
+    height: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: flex-end;
+
+    align-items: center;
+}
+
+
+.chart-bar-area {
+    width: 100%;
+
+    height: 180px;
+
+    display: flex;
+
+    align-items: flex-end;
+
+    justify-content: center;
+}
+
+
+.chart-bar {
+    width: 25px;
+
+    min-height: 3px;
+
+    background: #0d6efd;
+
+    border-radius: 5px 5px 0 0;
+
+    transition: 0.2s;
+}
+
+
+.chart-bar:hover {
+    background: #084298;
+}
+
+
+.chart-number {
+    font-size: 11px;
+
+    color: #555;
+
+    margin-bottom: 4px;
+}
+
+
+.chart-day {
+    font-size: 12px;
+
+    color: #666;
+
+    margin-top: 6px;
+}
+
+
+/* ================= RECENT OT ================= */
+
+.recent-item {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 12px;
+
+    border-bottom: 1px solid #eee;
+}
+
+
+.recent-item:last-child {
+    border-bottom: none;
+}
+
+
+.recent-date {
+    font-weight: bold;
+}
+
+
+.recent-note {
+    color: #777;
+
+    font-size: 13px;
+
+    margin-top: 3px;
+}
+
+
+.recent-hours {
+    font-weight: bold;
+
+    color: #0d6efd;
+
+    white-space: nowrap;
+}
+
+
+.no-data {
+    text-align: center;
+
+    color: #888;
+
+    padding: 25px;
+}
+
+
+/* ================= SUMMARY ================= */
 
 .summary {
     display: grid;
@@ -111,7 +397,7 @@ body {
     text-align: center;
 
     box-shadow:
-        0 3px 10px rgba(0,0,0,0.05);
+        0 3px 10px rgba(0, 0, 0, 0.05);
 }
 
 
@@ -129,8 +415,7 @@ body {
 }
 
 
-
-/* CALENDAR */
+/* ================= CALENDAR ================= */
 
 .calendar-card {
     background: white;
@@ -140,7 +425,7 @@ body {
     padding: 20px;
 
     box-shadow:
-        0 3px 10px rgba(0,0,0,0.05);
+        0 3px 10px rgba(0, 0, 0, 0.05);
 }
 
 
@@ -241,6 +526,12 @@ body {
     font-size: 13px;
 
     font-weight: bold;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
 }
 
 
@@ -249,13 +540,77 @@ body {
 }
 
 
+/* ================= MOBILE ================= */
 
-/* MOBILE */
+@media (max-width: 900px) {
+
+    .dashboard-summary {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+}
+
 
 @media (max-width: 600px) {
 
     .container {
         padding: 10px !important;
+    }
+
+
+    .app-header h1 {
+        font-size: 20px;
+    }
+
+
+    .app-header {
+        gap: 10px;
+    }
+
+
+    .navigation {
+        overflow-x: auto;
+    }
+
+
+    .nav-button {
+        white-space: nowrap;
+    }
+
+
+    .dashboard-summary {
+        grid-template-columns:
+            1fr 1fr;
+
+        gap: 10px;
+    }
+
+
+    .dashboard-box {
+        padding: 15px;
+
+        gap: 8px;
+    }
+
+
+    .dashboard-icon {
+        font-size: 24px;
+    }
+
+
+    .dashboard-box span {
+        font-size: 12px;
+    }
+
+
+    .dashboard-box strong {
+        font-size: 17px;
+    }
+
+
+    .dashboard-card {
+        padding: 15px;
     }
 
 
@@ -282,16 +637,6 @@ body {
 
     .summary-box strong {
         font-size: 18px;
-    }
-
-
-    .app-header h1 {
-        font-size: 20px;
-    }
-
-
-    .app-header {
-        gap: 10px;
     }
 
 }

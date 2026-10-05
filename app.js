@@ -2,7 +2,6 @@ import {
     initializeApp
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
 
-
 import {
     getAuth,
     createUserWithEmailAndPassword,
@@ -10,7 +9,6 @@ import {
     signOut,
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-
 
 import {
     getFirestore,
@@ -22,88 +20,46 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 
-
-/* =========================
-   FIREBASE CONFIG
-========================= */
+/* ================= FIREBASE ================= */
 
 const firebaseConfig = {
-
-    apiKey:
-        "AIzaSyCXDBm3WiI37D9gUEvt1crSAKbSOXwHWRk",
-
-    authDomain:
-        "my-ot-calendar.firebaseapp.com",
-
-    projectId:
-        "my-ot-calendar",
-
-    storageBucket:
-        "my-ot-calendar.firebasestorage.app",
-
-    messagingSenderId:
-        "631206414956",
-
-    appId:
-        "1:631206414956:web:1bf04374ec378190c56649",
-
-    measurementId:
-        "G-1K8V7K24GR"
-
+    apiKey: "AIzaSyCXDBm3Wi37D9gUEvt1crSAKbSOXwHWRk",
+    authDomain: "my-ot-calendar.firebaseapp.com",
+    projectId: "my-ot-calendar",
+    storageBucket: "my-ot-calendar.firebasestorage.app",
+    messagingSenderId: "631206414956",
+    appId: "1:631206414956:web:1bf04374ec378190c56649",
+    measurementId: "G-1K8V7K24GR"
 };
 
 
+const app = initializeApp(firebaseConfig);
 
-const app =
-    initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-
-const auth =
-    getAuth(app);
+const db = getFirestore(app);
 
 
-const db =
-    getFirestore(app);
+/* ================= VARIABLES ================= */
+
+let currentDate = new Date();
+
+let selectedDate = "";
+
+let otData = {};
+
+let currentUser = null;
 
 
-
-/* =========================
-   VARIABLES
-========================= */
-
-let currentDate =
-    new Date();
-
-
-let selectedDate =
-    "";
-
-
-let otData =
-    {};
-
-
-let currentUser =
-    null;
-
-
-
-/* =========================
-   LOGIN
-========================= */
+/* ================= LOGIN ================= */
 
 async function login() {
 
     const email =
-        document.getElementById(
-            "loginEmail"
-        ).value.trim();
-
+        document.getElementById("loginEmail").value.trim();
 
     const password =
-        document.getElementById(
-            "loginPassword"
-        ).value;
+        document.getElementById("loginPassword").value;
 
 
     if (!email || !password) {
@@ -113,7 +69,6 @@ async function login() {
         );
 
         return;
-
     }
 
 
@@ -138,30 +93,18 @@ async function login() {
 }
 
 
-
-/* =========================
-   REGISTER
-========================= */
+/* ================= REGISTER ================= */
 
 async function register() {
 
     const email =
-        document.getElementById(
-            "registerEmail"
-        ).value.trim();
-
+        document.getElementById("registerEmail").value.trim();
 
     const password =
-        document.getElementById(
-            "registerPassword"
-        ).value;
-
+        document.getElementById("registerPassword").value;
 
     const confirmPassword =
-        document.getElementById(
-            "registerPasswordConfirm"
-        ).value;
-
+        document.getElementById("registerPasswordConfirm").value;
 
 
     if (!email || !password) {
@@ -171,7 +114,6 @@ async function register() {
         );
 
         return;
-
     }
 
 
@@ -182,7 +124,6 @@ async function register() {
         );
 
         return;
-
     }
 
 
@@ -193,9 +134,7 @@ async function register() {
         );
 
         return;
-
     }
-
 
 
     try {
@@ -206,11 +145,7 @@ async function register() {
             password
         );
 
-
-        alert(
-            "สมัครสมาชิกเรียบร้อยแล้ว"
-        );
-
+        alert("สมัครสมาชิกเรียบร้อยแล้ว");
 
     } catch (error) {
 
@@ -225,10 +160,7 @@ async function register() {
 }
 
 
-
-/* =========================
-   LOGOUT
-========================= */
+/* ================= LOGOUT ================= */
 
 async function logout() {
 
@@ -237,10 +169,7 @@ async function logout() {
 }
 
 
-
-/* =========================
-   AUTH STATE
-========================= */
+/* ================= AUTH STATE ================= */
 
 onAuthStateChanged(
     auth,
@@ -248,19 +177,15 @@ onAuthStateChanged(
 
         if (user) {
 
-            currentUser =
-                user;
-
+            currentUser = user;
 
             document.getElementById(
                 "loginPage"
             ).style.display = "none";
 
-
             document.getElementById(
                 "registerPage"
             ).style.display = "none";
-
 
             document.getElementById(
                 "appPage"
@@ -269,8 +194,7 @@ onAuthStateChanged(
 
             document.getElementById(
                 "userEmail"
-            ).textContent =
-                user.email;
+            ).textContent = user.email;
 
 
             await loadOT();
@@ -278,21 +202,23 @@ onAuthStateChanged(
 
             renderCalendar();
 
+            renderDashboard();
+
+
+            showDashboard();
+
+
         } else {
 
-            currentUser =
-                null;
-
+            currentUser = null;
 
             document.getElementById(
                 "loginPage"
             ).style.display = "flex";
 
-
             document.getElementById(
                 "registerPage"
             ).style.display = "none";
-
 
             document.getElementById(
                 "appPage"
@@ -304,15 +230,11 @@ onAuthStateChanged(
 );
 
 
-
-/* =========================
-   LOAD OT
-========================= */
+/* ================= LOAD OT ================= */
 
 async function loadOT() {
 
-    if (!currentUser)
-        return;
+    if (!currentUser) return;
 
 
     otData = {};
@@ -328,17 +250,13 @@ async function loadOT() {
 
 
     const snapshot =
-        await getDocs(
-            otCollection
-        );
+        await getDocs(otCollection);
 
 
     snapshot.forEach(
         (document) => {
 
-            otData[
-                document.id
-            ] =
+            otData[document.id] =
                 document.data();
 
         }
@@ -347,10 +265,7 @@ async function loadOT() {
 }
 
 
-
-/* =========================
-   SAVE OT / NOTE
-========================= */
+/* ================= SAVE OT ================= */
 
 async function saveOT() {
 
@@ -372,29 +287,15 @@ async function saveOT() {
             : parseFloat(hoursInput);
 
 
-
-    /* =========================
-       CHECK HOURS
-    ========================= */
-
-    if (
-        isNaN(hours) ||
-        hours < 0
-    ) {
+    if (isNaN(hours) || hours < 0) {
 
         alert(
             "จำนวนชั่วโมงไม่ถูกต้อง"
         );
 
         return;
-
     }
 
-
-
-    /* =========================
-       CHECK EMPTY
-    ========================= */
 
     if (
         hours === 0 &&
@@ -406,14 +307,8 @@ async function saveOT() {
         );
 
         return;
-
     }
 
-
-
-    /* =========================
-       CHECK LOGIN
-    ========================= */
 
     if (!currentUser) {
 
@@ -422,9 +317,7 @@ async function saveOT() {
         );
 
         return;
-
     }
-
 
 
     try {
@@ -442,56 +335,30 @@ async function saveOT() {
         await setDoc(
             otDocument,
             {
-
-                date:
-                    selectedDate,
-
-                hours:
-                    hours,
-
-                note:
-                    note,
-
+                date: selectedDate,
+                hours: hours,
+                note: note,
                 updatedAt:
                     new Date().toISOString()
-
             }
         );
 
 
+        otData[selectedDate] = {
 
-        /* =========================
-           UPDATE LOCAL DATA
-        ========================= */
+            date: selectedDate,
 
-        otData[
-            selectedDate
-        ] = {
+            hours: hours,
 
-            date:
-                selectedDate,
-
-            hours:
-                hours,
-
-            note:
-                note
+            note: note
 
         };
 
 
-
-        /* =========================
-           REFRESH CALENDAR
-        ========================= */
-
         renderCalendar();
 
+        renderDashboard();
 
-
-        /* =========================
-           CLOSE MODAL
-        ========================= */
 
         const modal =
             bootstrap.Modal.getInstance(
@@ -517,15 +384,11 @@ async function saveOT() {
 }
 
 
-
-/* =========================
-   DELETE OT / NOTE
-========================= */
+/* ================= DELETE OT ================= */
 
 async function deleteCurrentOT() {
 
-    if (!selectedDate)
-        return;
+    if (!selectedDate) return;
 
 
     if (!otData[selectedDate]) {
@@ -535,7 +398,6 @@ async function deleteCurrentOT() {
         );
 
         return;
-
     }
 
 
@@ -545,9 +407,7 @@ async function deleteCurrentOT() {
         );
 
 
-    if (!confirmDelete)
-        return;
-
+    if (!confirmDelete) return;
 
 
     try {
@@ -563,14 +423,12 @@ async function deleteCurrentOT() {
         );
 
 
-        delete otData[
-            selectedDate
-        ];
-
+        delete otData[selectedDate];
 
 
         renderCalendar();
 
+        renderDashboard();
 
 
         const modal =
@@ -597,10 +455,7 @@ async function deleteCurrentOT() {
 }
 
 
-
-/* =========================
-   CALENDAR
-========================= */
+/* ================= CALENDAR ================= */
 
 function renderCalendar() {
 
@@ -621,7 +476,6 @@ function renderCalendar() {
         currentDate.getMonth();
 
 
-
     const monthNames = [
 
         "มกราคม",
@@ -640,15 +494,12 @@ function renderCalendar() {
     ];
 
 
-
     document.getElementById(
         "monthYear"
     ).textContent =
-
         monthNames[month] +
         " " +
         (year + 543);
-
 
 
     let startDay =
@@ -665,7 +516,6 @@ function renderCalendar() {
             : startDay - 1;
 
 
-
     const daysInMonth =
         new Date(
             year,
@@ -673,11 +523,6 @@ function renderCalendar() {
             0
         ).getDate();
 
-
-
-    /* =========================
-       EMPTY DAYS
-    ========================= */
 
     for (
         let i = 0;
@@ -706,11 +551,6 @@ function renderCalendar() {
     }
 
 
-
-    /* =========================
-       DAYS
-    ========================= */
-
     for (
         let day = 1;
         day <= daysInMonth;
@@ -727,20 +567,13 @@ function renderCalendar() {
             "day";
 
 
-
         const dateKey =
-
             `${year}-${String(
                 month + 1
             ).padStart(2, "0")}-${String(
                 day
             ).padStart(2, "0")}`;
 
-
-
-        /* =========================
-           DAY NUMBER
-        ========================= */
 
         const number =
             document.createElement(
@@ -761,26 +594,14 @@ function renderCalendar() {
         );
 
 
-
-        /* =========================
-           TODAY
-        ========================= */
-
         const today =
             new Date();
 
 
         if (
-
-            day ===
-            today.getDate() &&
-
-            month ===
-            today.getMonth() &&
-
-            year ===
-            today.getFullYear()
-
+            day === today.getDate() &&
+            month === today.getMonth() &&
+            year === today.getFullYear()
         ) {
 
             div.classList.add(
@@ -790,14 +611,7 @@ function renderCalendar() {
         }
 
 
-
-        /* =========================
-           OT / NOTE
-        ========================= */
-
-        if (
-            otData[dateKey]
-        ) {
+        if (otData[dateKey]) {
 
             const ot =
                 document.createElement(
@@ -811,44 +625,23 @@ function renderCalendar() {
 
             const hours =
                 Number(
-                    otData[
-                        dateKey
-                    ].hours
+                    otData[dateKey].hours
                 );
 
 
             const note =
-                otData[
-                    dateKey
-                ].note ||
+                otData[dateKey].note ||
                 "";
 
 
-
-            /* =========================
-               OT
-            ========================= */
-
-            if (
-                hours > 0
-            ) {
+            if (hours > 0) {
 
                 ot.textContent =
                     "OT " +
                     hours +
                     " ชม.";
 
-            }
-
-
-
-            /* =========================
-               NOTE ONLY
-            ========================= */
-
-            else if (
-                note !== ""
-            ) {
+            } else if (note !== "") {
 
                 ot.textContent =
                     "📝 " +
@@ -857,18 +650,12 @@ function renderCalendar() {
             }
 
 
-
             div.appendChild(
                 ot
             );
 
         }
 
-
-
-        /* =========================
-           CLICK DAY
-        ========================= */
 
         div.onclick =
             function () {
@@ -880,7 +667,6 @@ function renderCalendar() {
             };
 
 
-
         calendar.appendChild(
             div
         );
@@ -888,24 +674,17 @@ function renderCalendar() {
     }
 
 
-
     updateSummary();
 
 }
 
 
+/* ================= OPEN MODAL ================= */
 
-/* =========================
-   OPEN OT MODAL
-========================= */
-
-function openOTModal(
-    dateKey
-) {
+function openOTModal(dateKey) {
 
     selectedDate =
         dateKey;
-
 
 
     const date =
@@ -913,7 +692,6 @@ function openOTModal(
             dateKey +
             "T00:00:00"
         );
-
 
 
     const day =
@@ -928,41 +706,22 @@ function openOTModal(
         date.getFullYear() + 543;
 
 
-
     document.getElementById(
         "selectedDate"
     ).textContent =
-
         `${day}/${month}/${year}`;
 
-
-
-    /* =========================
-       LOAD HOURS
-    ========================= */
 
     document.getElementById(
         "otHours"
     ).value =
+        otData[dateKey]?.hours || "";
 
-        otData[
-            dateKey
-        ]?.hours || "";
-
-
-
-    /* =========================
-       LOAD NOTE
-    ========================= */
 
     document.getElementById(
         "otNote"
     ).value =
-
-        otData[
-            dateKey
-        ]?.note || "";
-
+        otData[dateKey]?.note || "";
 
 
     const modal =
@@ -978,10 +737,7 @@ function openOTModal(
 }
 
 
-
-/* =========================
-   SUMMARY
-========================= */
+/* ================= SUMMARY ================= */
 
 function updateSummary() {
 
@@ -993,13 +749,9 @@ function updateSummary() {
         currentDate.getMonth();
 
 
-    let total =
-        0;
+    let total = 0;
 
-
-    let days =
-        0;
-
+    let days = 0;
 
 
     for (
@@ -1013,42 +765,21 @@ function updateSummary() {
             );
 
 
-
         if (
-
-            d.getFullYear() ===
-            year &&
-
-            d.getMonth() ===
-            month
-
+            d.getFullYear() === year &&
+            d.getMonth() === month
         ) {
 
             const hours =
                 Number(
-                    otData[
-                        date
-                    ].hours
+                    otData[date].hours
                 );
 
 
-
-            /* =========================
-               TOTAL HOURS
-            ========================= */
-
-            total +=
-                hours;
+            total += hours;
 
 
-
-            /* =========================
-               OT DAYS
-            ========================= */
-
-            if (
-                hours > 0
-            ) {
+            if (hours > 0) {
 
                 days++;
 
@@ -1059,11 +790,9 @@ function updateSummary() {
     }
 
 
-
     document.getElementById(
         "totalOT"
     ).textContent =
-
         total +
         " ชั่วโมง";
 
@@ -1071,17 +800,473 @@ function updateSummary() {
     document.getElementById(
         "otDays"
     ).textContent =
-
         days +
         " วัน";
 
 }
 
 
+/* ================= DASHBOARD ================= */
 
-/* =========================
-   MONTH
-========================= */
+function renderDashboard() {
+
+    const year =
+        currentDate.getFullYear();
+
+
+    const month =
+        currentDate.getMonth();
+
+
+    let total = 0;
+
+    let days = 0;
+
+    let max = 0;
+
+
+    const monthData = [];
+
+
+    for (
+        const date in otData
+    ) {
+
+        const d =
+            new Date(
+                date +
+                "T00:00:00"
+            );
+
+
+        if (
+            d.getFullYear() === year &&
+            d.getMonth() === month
+        ) {
+
+            const hours =
+                Number(
+                    otData[date].hours
+                );
+
+
+            if (hours > 0) {
+
+                total += hours;
+
+                days++;
+
+
+                if (hours > max) {
+
+                    max = hours;
+
+                }
+
+
+                monthData.push({
+
+                    date: date,
+
+                    hours: hours,
+
+                    note:
+                        otData[date].note ||
+                        ""
+
+                });
+
+            }
+
+        }
+
+    }
+
+
+    const average =
+        days > 0
+            ? total / days
+            : 0;
+
+
+    document.getElementById(
+        "dashboardTotalOT"
+    ).textContent =
+        total +
+        " ชั่วโมง";
+
+
+    document.getElementById(
+        "dashboardOTDays"
+    ).textContent =
+        days +
+        " วัน";
+
+
+    document.getElementById(
+        "dashboardAverage"
+    ).textContent =
+        average.toFixed(1) +
+        " ชั่วโมง";
+
+
+    document.getElementById(
+        "dashboardMax"
+    ).textContent =
+        max +
+        " ชั่วโมง";
+
+
+    renderChart();
+
+
+    renderRecentOT();
+
+}
+
+
+/* ================= CHART ================= */
+
+function renderChart() {
+
+    const chart =
+        document.getElementById(
+            "otChart"
+        );
+
+
+    chart.innerHTML = "";
+
+
+    const year =
+        currentDate.getFullYear();
+
+
+    const month =
+        currentDate.getMonth();
+
+
+    const daysInMonth =
+        new Date(
+            year,
+            month + 1,
+            0
+        ).getDate();
+
+
+    let maxHours = 0;
+
+
+    for (
+        let day = 1;
+        day <= daysInMonth;
+        day++
+    ) {
+
+        const dateKey =
+            `${year}-${String(
+                month + 1
+            ).padStart(2, "0")}-${String(
+                day
+            ).padStart(2, "0")}`;
+
+
+        const hours =
+            Number(
+                otData[dateKey]?.hours || 0
+            );
+
+
+        if (hours > maxHours) {
+
+            maxHours = hours;
+
+        }
+
+    }
+
+
+    for (
+        let day = 1;
+        day <= daysInMonth;
+        day++
+    ) {
+
+        const dateKey =
+            `${year}-${String(
+                month + 1
+            ).padStart(2, "0")}-${String(
+                day
+            ).padStart(2, "0")}`;
+
+
+        const hours =
+            Number(
+                otData[dateKey]?.hours || 0
+            );
+
+
+        const item =
+            document.createElement(
+                "div"
+            );
+
+
+        item.className =
+            "chart-item";
+
+
+        const barArea =
+            document.createElement(
+                "div"
+            );
+
+
+        barArea.className =
+            "chart-bar-area";
+
+
+        const number =
+            document.createElement(
+                "div"
+            );
+
+
+        number.className =
+            "chart-number";
+
+
+        number.textContent =
+            hours > 0
+                ? hours
+                : "";
+
+
+        const bar =
+            document.createElement(
+                "div"
+            );
+
+
+        bar.className =
+            "chart-bar";
+
+
+        if (hours > 0) {
+
+            const height =
+                maxHours > 0
+                    ? (hours / maxHours) *
+                      100
+                    : 0;
+
+
+            bar.style.height =
+                height + "%";
+
+        } else {
+
+            bar.style.height =
+                "3px";
+
+        }
+
+
+        barArea.appendChild(
+            number
+        );
+
+
+        barArea.appendChild(
+            bar
+        );
+
+
+        const dayText =
+            document.createElement(
+                "div"
+            );
+
+
+        dayText.className =
+            "chart-day";
+
+
+        dayText.textContent =
+            day;
+
+
+        item.appendChild(
+            barArea
+        );
+
+
+        item.appendChild(
+            dayText
+        );
+
+
+        chart.appendChild(
+            item
+        );
+
+    }
+
+
+    const monthNames = [
+
+        "มกราคม",
+        "กุมภาพันธ์",
+        "มีนาคม",
+        "เมษายน",
+        "พฤษภาคม",
+        "มิถุนายน",
+        "กรกฎาคม",
+        "สิงหาคม",
+        "กันยายน",
+        "ตุลาคม",
+        "พฤศจิกายน",
+        "ธันวาคม"
+
+    ];
+
+
+    document.getElementById(
+        "dashboardMonth"
+    ).textContent =
+        monthNames[month] +
+        " " +
+        (year + 543);
+
+}
+
+
+/* ================= RECENT ================= */
+
+function renderRecentOT() {
+
+    const container =
+        document.getElementById(
+            "recentOT"
+        );
+
+
+    container.innerHTML = "";
+
+
+    const entries =
+        Object.values(
+            otData
+        )
+        .filter(
+            item =>
+                Number(item.hours) > 0 ||
+                item.note
+        )
+        .sort(
+            (a, b) =>
+                b.date.localeCompare(
+                    a.date
+                )
+        )
+        .slice(0, 5);
+
+
+    if (entries.length === 0) {
+
+        container.innerHTML =
+            `<div class="no-data">
+                ยังไม่มีข้อมูล OT
+            </div>`;
+
+        return;
+    }
+
+
+    entries.forEach(
+        item => {
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+
+            div.className =
+                "recent-item";
+
+
+            const left =
+                document.createElement(
+                    "div"
+                );
+
+
+            const date =
+                new Date(
+                    item.date +
+                    "T00:00:00"
+                );
+
+
+            const dateText =
+                `${date.getDate()}/${
+                    date.getMonth() + 1
+                }/${
+                    date.getFullYear() + 543
+                }`;
+
+
+            left.innerHTML =
+                `<div class="recent-date">
+                    ${dateText}
+                </div>
+                <div class="recent-note">
+                    ${item.note || "ไม่มีหมายเหตุ"}
+                </div>`;
+
+
+            const right =
+                document.createElement(
+                    "div"
+                );
+
+
+            right.className =
+                "recent-hours";
+
+
+            const hours =
+                Number(item.hours || 0);
+
+
+            right.textContent =
+                hours > 0
+                    ? `OT ${hours} ชม.`
+                    : "📝 Note";
+
+
+            div.appendChild(
+                left
+            );
+
+
+            div.appendChild(
+                right
+            );
+
+
+            container.appendChild(
+                div
+            );
+
+        }
+    );
+
+}
+
+
+/* ================= MONTH ================= */
 
 function previousMonth() {
 
@@ -1092,8 +1277,9 @@ function previousMonth() {
 
     renderCalendar();
 
-}
+    renderDashboard();
 
+}
 
 
 function nextMonth() {
@@ -1105,13 +1291,76 @@ function nextMonth() {
 
     renderCalendar();
 
+    renderDashboard();
+
 }
 
 
+/* ================= PAGE ================= */
 
-/* =========================
-   LOGIN / REGISTER PAGE
-========================= */
+function showDashboard() {
+
+    document.getElementById(
+        "dashboardPage"
+    ).style.display = "block";
+
+
+    document.getElementById(
+        "calendarPage"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "dashboardButton"
+    ).classList.add(
+        "active"
+    );
+
+
+    document.getElementById(
+        "calendarButton"
+    ).classList.remove(
+        "active"
+    );
+
+
+    renderDashboard();
+
+}
+
+
+function showCalendar() {
+
+    document.getElementById(
+        "dashboardPage"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "calendarPage"
+    ).style.display = "block";
+
+
+    document.getElementById(
+        "dashboardButton"
+    ).classList.remove(
+        "active"
+    );
+
+
+    document.getElementById(
+        "calendarButton"
+    ).classList.add(
+        "active"
+    );
+
+
+    renderCalendar();
+
+}
+
+
+/* ================= REGISTER / LOGIN PAGE ================= */
 
 function showRegister() {
 
@@ -1125,7 +1374,6 @@ function showRegister() {
     ).style.display = "flex";
 
 }
-
 
 
 function showLogin() {
@@ -1142,14 +1390,9 @@ function showLogin() {
 }
 
 
+/* ================= ERROR ================= */
 
-/* =========================
-   ERROR
-========================= */
-
-function showLoginError(
-    message
-) {
+function showLoginError(message) {
 
     const box =
         document.getElementById(
@@ -1167,10 +1410,7 @@ function showLoginError(
 }
 
 
-
-function showRegisterError(
-    message
-) {
+function showRegisterError(message) {
 
     const box =
         document.getElementById(
@@ -1188,51 +1428,38 @@ function showRegisterError(
 }
 
 
+/* ================= FIREBASE ERROR ================= */
 
-/* =========================
-   FIREBASE ERROR
-========================= */
+function getFirebaseError(error) {
 
-function getFirebaseError(
-    error
-) {
+    switch (error.code) {
 
-    switch (
-        error.code
-    ) {
-
-        case
-        "auth/invalid-credential":
+        case "auth/invalid-credential":
 
             return "Email หรือ Password ไม่ถูกต้อง";
 
 
-        case
-        "auth/user-not-found":
+        case "auth/user-not-found":
 
             return "ไม่พบผู้ใช้นี้";
 
 
-        case
-        "auth/wrong-password":
+        case "auth/wrong-password":
 
             return "Password ไม่ถูกต้อง";
 
 
-        case
-        "auth/email-already-in-use":
+        case "auth/email-already-in-use":
 
             return "Email นี้ถูกใช้งานแล้ว";
 
 
-        case
-        "auth/invalid-email":
+        case "auth/invalid-email":
 
             return "รูปแบบ Email ไม่ถูกต้อง";
 
 
-        case
-        "auth/weak-password":
+        case "auth/weak-password":
 
             return "Password ต้องมีอย่างน้อย 6 ตัวอักษร";
 
@@ -1246,42 +1473,31 @@ function getFirebaseError(
 }
 
 
+/* ================= GLOBAL ================= */
 
-/* =========================
-   GLOBAL FUNCTIONS
-========================= */
+window.login = login;
 
-window.login =
-    login;
+window.register = register;
 
+window.logout = logout;
 
-window.register =
-    register;
+window.showRegister = showRegister;
 
+window.showLogin = showLogin;
 
-window.logout =
-    logout;
-
-
-window.showRegister =
-    showRegister;
-
-
-window.showLogin =
-    showLogin;
-
-
-window.saveOT =
-    saveOT;
-
+window.saveOT = saveOT;
 
 window.deleteCurrentOT =
     deleteCurrentOT;
 
-
 window.previousMonth =
     previousMonth;
 
-
 window.nextMonth =
     nextMonth;
+
+window.showDashboard =
+    showDashboard;
+
+window.showCalendar =
+    showCalendar;

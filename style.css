@@ -372,7 +372,41 @@ body {
     padding: 25px;
 }
 
+/* ================= DATE RANGE ================= */
 
+.date-range-box {
+    background: white;
+
+    padding: 20px;
+
+    border-radius: 15px;
+
+    margin-bottom: 20px;
+
+    box-shadow:
+        0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+
+.date-range-box h5 {
+    font-weight: bold;
+
+    margin-bottom: 15px;
+}
+
+
+.date-range-box label {
+    font-weight: 500;
+}
+
+
+@media (max-width: 600px) {
+
+    .date-range-box {
+        padding: 15px;
+    }
+
+}
 /* ================= SUMMARY ================= */
 
 .summary {

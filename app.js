@@ -23,33 +23,64 @@ import {
 /* ================= FIREBASE ================= */
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCXDBm3WiI37D9gUEvt1crSAKbSOXwHWRk",
-  authDomain: "my-ot-calendar.firebaseapp.com",
-  projectId: "my-ot-calendar",
-  storageBucket: "my-ot-calendar.firebasestorage.app",
-  messagingSenderId: "631206414956",
-  appId: "1:631206414956:web:1bf04374ec378190c56649",
-  measurementId: "G-1K8V7K24GR"
+
+    apiKey: "ใส่_API_KEY_ใหม่ตรงนี้",
+
+    authDomain:
+        "my-ot-calendar.firebaseapp.com",
+
+    projectId:
+        "my-ot-calendar",
+
+    storageBucket:
+        "my-ot-calendar.firebasestorage.app",
+
+    messagingSenderId:
+        "631206414956",
+
+    appId:
+        "1:631206414956:web:1bf04374ec378190c56649",
+
+    measurementId:
+        "G-1K8V7K24GR"
+
 };
 
 
+const app =
+    initializeApp(firebaseConfig);
 
-const app = initializeApp(firebaseConfig);
 
-const auth = getAuth(app);
+const auth =
+    getAuth(app);
 
-const db = getFirestore(app);
+
+const db =
+    getFirestore(app);
 
 
 /* ================= VARIABLES ================= */
 
-let currentDate = new Date();
+let currentDate =
+    new Date();
 
-let selectedDate = "";
+let selectedDate =
+    "";
 
-let otData = {};
+let otData =
+    {};
 
-let currentUser = null;
+let currentUser =
+    null;
+
+
+/* ================= DASHBOARD DATE RANGE ================= */
+
+let dashboardStartDate =
+    "";
+
+let dashboardEndDate =
+    "";
 
 
 /* ================= LOGIN ================= */
@@ -57,10 +88,15 @@ let currentUser = null;
 async function login() {
 
     const email =
-        document.getElementById("loginEmail").value.trim();
+        document.getElementById(
+            "loginEmail"
+        ).value.trim();
+
 
     const password =
-        document.getElementById("loginPassword").value;
+        document.getElementById(
+            "loginPassword"
+        ).value;
 
 
     if (!email || !password) {
@@ -99,13 +135,21 @@ async function login() {
 async function register() {
 
     const email =
-        document.getElementById("registerEmail").value.trim();
+        document.getElementById(
+            "registerEmail"
+        ).value.trim();
+
 
     const password =
-        document.getElementById("registerPassword").value;
+        document.getElementById(
+            "registerPassword"
+        ).value;
+
 
     const confirmPassword =
-        document.getElementById("registerPasswordConfirm").value;
+        document.getElementById(
+            "registerPasswordConfirm"
+        ).value;
 
 
     if (!email || !password) {
@@ -146,7 +190,9 @@ async function register() {
             password
         );
 
-        alert("สมัครสมาชิกเรียบร้อยแล้ว");
+        alert(
+            "สมัครสมาชิกเรียบร้อยแล้ว"
+        );
 
     } catch (error) {
 
@@ -178,30 +224,42 @@ onAuthStateChanged(
 
         if (user) {
 
-            currentUser = user;
+            currentUser =
+                user;
+
 
             document.getElementById(
                 "loginPage"
-            ).style.display = "none";
+            ).style.display =
+                "none";
+
 
             document.getElementById(
                 "registerPage"
-            ).style.display = "none";
+            ).style.display =
+                "none";
+
 
             document.getElementById(
                 "appPage"
-            ).style.display = "block";
+            ).style.display =
+                "block";
 
 
             document.getElementById(
                 "userEmail"
-            ).textContent = user.email;
+            ).textContent =
+                user.email;
 
 
             await loadOT();
 
 
             renderCalendar();
+
+
+            setDefaultDateRange();
+
 
             renderDashboard();
 
@@ -211,19 +269,26 @@ onAuthStateChanged(
 
         } else {
 
-            currentUser = null;
+            currentUser =
+                null;
+
 
             document.getElementById(
                 "loginPage"
-            ).style.display = "flex";
+            ).style.display =
+                "flex";
+
 
             document.getElementById(
                 "registerPage"
-            ).style.display = "none";
+            ).style.display =
+                "none";
+
 
             document.getElementById(
                 "appPage"
-            ).style.display = "none";
+            ).style.display =
+                "none";
 
         }
 
@@ -251,13 +316,17 @@ async function loadOT() {
 
 
     const snapshot =
-        await getDocs(otCollection);
+        await getDocs(
+            otCollection
+        );
 
 
     snapshot.forEach(
         (document) => {
 
-            otData[document.id] =
+            otData[
+                document.id
+            ] =
                 document.data();
 
         }
@@ -288,7 +357,10 @@ async function saveOT() {
             : parseFloat(hoursInput);
 
 
-    if (isNaN(hours) || hours < 0) {
+    if (
+        isNaN(hours) ||
+        hours < 0
+    ) {
 
         alert(
             "จำนวนชั่วโมงไม่ถูกต้อง"
@@ -336,22 +408,33 @@ async function saveOT() {
         await setDoc(
             otDocument,
             {
-                date: selectedDate,
-                hours: hours,
-                note: note,
+                date:
+                    selectedDate,
+
+                hours:
+                    hours,
+
+                note:
+                    note,
+
                 updatedAt:
                     new Date().toISOString()
             }
         );
 
 
-        otData[selectedDate] = {
+        otData[
+            selectedDate
+        ] = {
 
-            date: selectedDate,
+            date:
+                selectedDate,
 
-            hours: hours,
+            hours:
+                hours,
 
-            note: note
+            note:
+                note
 
         };
 
@@ -424,7 +507,9 @@ async function deleteCurrentOT() {
         );
 
 
-        delete otData[selectedDate];
+        delete otData[
+            selectedDate
+        ];
 
 
         renderCalendar();
@@ -466,7 +551,8 @@ function renderCalendar() {
         );
 
 
-    calendar.innerHTML = "";
+    calendar.innerHTML =
+        "";
 
 
     const year =
@@ -626,13 +712,16 @@ function renderCalendar() {
 
             const hours =
                 Number(
-                    otData[dateKey].hours
+                    otData[
+                        dateKey
+                    ].hours
                 );
 
 
             const note =
-                otData[dateKey].note ||
-                "";
+                otData[
+                    dateKey
+                ].note || "";
 
 
             if (hours > 0) {
@@ -642,7 +731,9 @@ function renderCalendar() {
                     hours +
                     " ชม.";
 
-            } else if (note !== "") {
+            } else if (
+                note !== ""
+            ) {
 
                 ot.textContent =
                     "📝 " +
@@ -682,7 +773,9 @@ function renderCalendar() {
 
 /* ================= OPEN MODAL ================= */
 
-function openOTModal(dateKey) {
+function openOTModal(
+    dateKey
+) {
 
     selectedDate =
         dateKey;
@@ -716,13 +809,17 @@ function openOTModal(dateKey) {
     document.getElementById(
         "otHours"
     ).value =
-        otData[dateKey]?.hours || "";
+        otData[
+            dateKey
+        ]?.hours || "";
 
 
     document.getElementById(
         "otNote"
     ).value =
-        otData[dateKey]?.note || "";
+        otData[
+            dateKey
+        ]?.note || "";
 
 
     const modal =
@@ -750,9 +847,12 @@ function updateSummary() {
         currentDate.getMonth();
 
 
-    let total = 0;
+    let total =
+        0;
 
-    let days = 0;
+
+    let days =
+        0;
 
 
     for (
@@ -773,14 +873,19 @@ function updateSummary() {
 
             const hours =
                 Number(
-                    otData[date].hours
+                    otData[
+                        date
+                    ].hours
                 );
 
 
-            total += hours;
+            total +=
+                hours;
 
 
-            if (hours > 0) {
+            if (
+                hours > 0
+            ) {
 
                 days++;
 
@@ -807,75 +912,228 @@ function updateSummary() {
 }
 
 
+/* ================= DATE RANGE ================= */
+
+function formatDateInput(
+    date
+) {
+
+    return `${date.getFullYear()}-${String(
+        date.getMonth() + 1
+    ).padStart(2, "0")}-${String(
+        date.getDate()
+    ).padStart(2, "0")}`;
+
+}
+
+
+function formatThaiDate(
+    dateString
+) {
+
+    if (!dateString)
+        return "";
+
+
+    const date =
+        new Date(
+            dateString +
+            "T00:00:00"
+        );
+
+
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear() + 543}`;
+
+}
+
+
+function setDefaultDateRange() {
+
+    const today =
+        new Date();
+
+
+    const start =
+        new Date(
+            today
+        );
+
+
+    start.setMonth(
+        start.getMonth() - 1
+    );
+
+
+    start.setDate(
+        20
+    );
+
+
+    const end =
+        new Date(
+            today
+        );
+
+
+    end.setDate(
+        20
+    );
+
+
+    dashboardStartDate =
+        formatDateInput(
+            start
+        );
+
+
+    dashboardEndDate =
+        formatDateInput(
+            end
+        );
+
+
+    const startInput =
+        document.getElementById(
+            "dashboardStartDate"
+        );
+
+
+    const endInput =
+        document.getElementById(
+            "dashboardEndDate"
+        );
+
+
+    if (startInput) {
+
+        startInput.value =
+            dashboardStartDate;
+
+    }
+
+
+    if (endInput) {
+
+        endInput.value =
+            dashboardEndDate;
+
+    }
+
+}
+
+
+function applyDateRange() {
+
+    const start =
+        document.getElementById(
+            "dashboardStartDate"
+        ).value;
+
+
+    const end =
+        document.getElementById(
+            "dashboardEndDate"
+        ).value;
+
+
+    if (
+        !start ||
+        !end
+    ) {
+
+        alert(
+            "กรุณาเลือกวันที่เริ่มต้นและวันที่สิ้นสุด"
+        );
+
+        return;
+    }
+
+
+    if (start > end) {
+
+        alert(
+            "วันที่เริ่มต้นต้องไม่มากกว่าวันที่สิ้นสุด"
+        );
+
+        return;
+    }
+
+
+    dashboardStartDate =
+        start;
+
+
+    dashboardEndDate =
+        end;
+
+
+    renderDashboard();
+
+}
+
+
 /* ================= DASHBOARD ================= */
 
 function renderDashboard() {
 
-    const year =
-        currentDate.getFullYear();
+    if (
+        !dashboardStartDate ||
+        !dashboardEndDate
+    ) {
+
+        setDefaultDateRange();
+
+    }
 
 
-    const month =
-        currentDate.getMonth();
+    let total =
+        0;
 
 
-    let total = 0;
-
-    let days = 0;
-
-    let max = 0;
+    let days =
+        0;
 
 
-    const monthData = [];
+    let max =
+        0;
 
 
     for (
         const date in otData
     ) {
 
-        const d =
-            new Date(
-                date +
-                "T00:00:00"
-            );
-
-
         if (
-            d.getFullYear() === year &&
-            d.getMonth() === month
+            date >= dashboardStartDate &&
+            date <= dashboardEndDate
         ) {
 
             const hours =
                 Number(
-                    otData[date].hours
+                    otData[
+                        date
+                    ].hours
                 );
 
 
-            if (hours > 0) {
+            if (
+                hours > 0
+            ) {
 
-                total += hours;
+                total +=
+                    hours;
+
 
                 days++;
 
 
-                if (hours > max) {
+                if (
+                    hours > max
+                ) {
 
-                    max = hours;
+                    max =
+                        hours;
 
                 }
-
-
-                monthData.push({
-
-                    date: date,
-
-                    hours: hours,
-
-                    note:
-                        otData[date].note ||
-                        ""
-
-                });
 
             }
 
@@ -918,8 +1176,25 @@ function renderDashboard() {
         " ชั่วโมง";
 
 
-    renderChart();
+    const dashboardMonth =
+        document.getElementById(
+            "dashboardMonth"
+        );
 
+
+    if (dashboardMonth) {
+
+        dashboardMonth.textContent =
+            `${formatThaiDate(
+                dashboardStartDate
+            )} - ${formatThaiDate(
+                dashboardEndDate
+            )}`;
+
+    }
+
+
+    renderChart();
 
     renderRecentOT();
 
@@ -936,208 +1211,221 @@ function renderChart() {
         );
 
 
-    chart.innerHTML = "";
+    if (!chart)
+        return;
 
 
-    const year =
-        currentDate.getFullYear();
+    chart.innerHTML =
+        "";
 
 
-    const month =
-        currentDate.getMonth();
+    if (
+        !dashboardStartDate ||
+        !dashboardEndDate
+    ) {
+
+        return;
+
+    }
 
 
-    const daysInMonth =
+    const startDate =
         new Date(
-            year,
-            month + 1,
-            0
-        ).getDate();
+            dashboardStartDate +
+            "T00:00:00"
+        );
 
 
-    let maxHours = 0;
+    const endDate =
+        new Date(
+            dashboardEndDate +
+            "T00:00:00"
+        );
+
+
+    const dates =
+        [];
 
 
     for (
-        let day = 1;
-        day <= daysInMonth;
-        day++
+        let date =
+            new Date(
+                startDate
+            );
+
+        date <= endDate;
+
+        date.setDate(
+            date.getDate() + 1
+        )
     ) {
 
-        const dateKey =
-            `${year}-${String(
-                month + 1
-            ).padStart(2, "0")}-${String(
-                day
-            ).padStart(2, "0")}`;
-
-
-        const hours =
-            Number(
-                otData[dateKey]?.hours || 0
-            );
-
-
-        if (hours > maxHours) {
-
-            maxHours = hours;
-
-        }
-
-    }
-
-
-    for (
-        let day = 1;
-        day <= daysInMonth;
-        day++
-    ) {
-
-        const dateKey =
-            `${year}-${String(
-                month + 1
-            ).padStart(2, "0")}-${String(
-                day
-            ).padStart(2, "0")}`;
-
-
-        const hours =
-            Number(
-                otData[dateKey]?.hours || 0
-            );
-
-
-        const item =
-            document.createElement(
-                "div"
-            );
-
-
-        item.className =
-            "chart-item";
-
-
-        const barArea =
-            document.createElement(
-                "div"
-            );
-
-
-        barArea.className =
-            "chart-bar-area";
-
-
-        const number =
-            document.createElement(
-                "div"
-            );
-
-
-        number.className =
-            "chart-number";
-
-
-        number.textContent =
-            hours > 0
-                ? hours
-                : "";
-
-
-        const bar =
-            document.createElement(
-                "div"
-            );
-
-
-        bar.className =
-            "chart-bar";
-
-
-        if (hours > 0) {
-
-            const height =
-                maxHours > 0
-                    ? (hours / maxHours) *
-                      100
-                    : 0;
-
-
-            bar.style.height =
-                height + "%";
-
-        } else {
-
-            bar.style.height =
-                "3px";
-
-        }
-
-
-        barArea.appendChild(
-            number
-        );
-
-
-        barArea.appendChild(
-            bar
-        );
-
-
-        const dayText =
-            document.createElement(
-                "div"
-            );
-
-
-        dayText.className =
-            "chart-day";
-
-
-        dayText.textContent =
-            day;
-
-
-        item.appendChild(
-            barArea
-        );
-
-
-        item.appendChild(
-            dayText
-        );
-
-
-        chart.appendChild(
-            item
+        dates.push(
+            formatDateInput(
+                date
+            )
         );
 
     }
 
 
-    const monthNames = [
-
-        "มกราคม",
-        "กุมภาพันธ์",
-        "มีนาคม",
-        "เมษายน",
-        "พฤษภาคม",
-        "มิถุนายน",
-        "กรกฎาคม",
-        "สิงหาคม",
-        "กันยายน",
-        "ตุลาคม",
-        "พฤศจิกายน",
-        "ธันวาคม"
-
-    ];
+    let maxHours =
+        0;
 
 
-    document.getElementById(
-        "dashboardMonth"
-    ).textContent =
-        monthNames[month] +
-        " " +
-        (year + 543);
+    dates.forEach(
+        function (dateKey) {
+
+            const hours =
+                Number(
+                    otData[
+                        dateKey
+                    ]?.hours || 0
+                );
+
+
+            if (
+                hours > maxHours
+            ) {
+
+                maxHours =
+                    hours;
+
+            }
+
+        }
+    );
+
+
+    dates.forEach(
+        function (dateKey) {
+
+            const hours =
+                Number(
+                    otData[
+                        dateKey
+                    ]?.hours || 0
+                );
+
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+
+            item.className =
+                "chart-item";
+
+
+            const barArea =
+                document.createElement(
+                    "div"
+                );
+
+
+            barArea.className =
+                "chart-bar-area";
+
+
+            const number =
+                document.createElement(
+                    "div"
+                );
+
+
+            number.className =
+                "chart-number";
+
+
+            number.textContent =
+                hours > 0
+                    ? hours
+                    : "";
+
+
+            const bar =
+                document.createElement(
+                    "div"
+                );
+
+
+            bar.className =
+                "chart-bar";
+
+
+            if (
+                hours > 0
+            ) {
+
+                const height =
+                    maxHours > 0
+                        ? (
+                            hours /
+                            maxHours
+                        ) * 100
+                        : 0;
+
+
+                bar.style.height =
+                    height +
+                    "%";
+
+            } else {
+
+                bar.style.height =
+                    "3px";
+
+            }
+
+
+            barArea.appendChild(
+                number
+            );
+
+
+            barArea.appendChild(
+                bar
+            );
+
+
+            const dayText =
+                document.createElement(
+                    "div"
+                );
+
+
+            dayText.className =
+                "chart-day";
+
+
+            const chartDate =
+                new Date(
+                    dateKey +
+                    "T00:00:00"
+                );
+
+
+            dayText.textContent =
+                chartDate.getDate();
+
+
+            item.appendChild(
+                barArea
+            );
+
+
+            item.appendChild(
+                dayText
+            );
+
+
+            chart.appendChild(
+                item
+            );
+
+        }
+    );
 
 }
 
@@ -1152,7 +1440,12 @@ function renderRecentOT() {
         );
 
 
-    container.innerHTML = "";
+    if (!container)
+        return;
+
+
+    container.innerHTML =
+        "";
 
 
     const entries =
@@ -1160,32 +1453,57 @@ function renderRecentOT() {
             otData
         )
         .filter(
-            item =>
-                Number(item.hours) > 0 ||
-                item.note
+            function (item) {
+
+                return (
+                    item.date >=
+                        dashboardStartDate &&
+
+                    item.date <=
+                        dashboardEndDate &&
+
+                    (
+                        Number(
+                            item.hours
+                        ) > 0 ||
+
+                        item.note
+                    )
+                );
+
+            }
         )
         .sort(
-            (a, b) =>
-                b.date.localeCompare(
+            function (a, b) {
+
+                return b.date.localeCompare(
                     a.date
-                )
+                );
+
+            }
         )
-        .slice(0, 5);
+        .slice(
+            0,
+            5
+        );
 
 
-    if (entries.length === 0) {
+    if (
+        entries.length === 0
+    ) {
 
         container.innerHTML =
             `<div class="no-data">
-                ยังไม่มีข้อมูล OT
+                ยังไม่มีข้อมูลในช่วงวันที่เลือก
             </div>`;
 
         return;
+
     }
 
 
     entries.forEach(
-        item => {
+        function (item) {
 
             const div =
                 document.createElement(
@@ -1203,25 +1521,17 @@ function renderRecentOT() {
                 );
 
 
-            const date =
-                new Date(
-                    item.date +
-                    "T00:00:00"
-                );
-
-
             const dateText =
-                `${date.getDate()}/${
-                    date.getMonth() + 1
-                }/${
-                    date.getFullYear() + 543
-                }`;
+                formatThaiDate(
+                    item.date
+                );
 
 
             left.innerHTML =
                 `<div class="recent-date">
                     ${dateText}
                 </div>
+
                 <div class="recent-note">
                     ${item.note || "ไม่มีหมายเหตุ"}
                 </div>`;
@@ -1238,7 +1548,9 @@ function renderRecentOT() {
 
 
             const hours =
-                Number(item.hours || 0);
+                Number(
+                    item.hours || 0
+                );
 
 
             right.textContent =
@@ -1303,12 +1615,14 @@ function showDashboard() {
 
     document.getElementById(
         "dashboardPage"
-    ).style.display = "block";
+    ).style.display =
+        "block";
 
 
     document.getElementById(
         "calendarPage"
-    ).style.display = "none";
+    ).style.display =
+        "none";
 
 
     document.getElementById(
@@ -1334,12 +1648,14 @@ function showCalendar() {
 
     document.getElementById(
         "dashboardPage"
-    ).style.display = "none";
+    ).style.display =
+        "none";
 
 
     document.getElementById(
         "calendarPage"
-    ).style.display = "block";
+    ).style.display =
+        "block";
 
 
     document.getElementById(
@@ -1367,12 +1683,14 @@ function showRegister() {
 
     document.getElementById(
         "loginPage"
-    ).style.display = "none";
+    ).style.display =
+        "none";
 
 
     document.getElementById(
         "registerPage"
-    ).style.display = "flex";
+    ).style.display =
+        "flex";
 
 }
 
@@ -1381,19 +1699,23 @@ function showLogin() {
 
     document.getElementById(
         "registerPage"
-    ).style.display = "none";
+    ).style.display =
+        "none";
 
 
     document.getElementById(
         "loginPage"
-    ).style.display = "flex";
+    ).style.display =
+        "flex";
 
 }
 
 
 /* ================= ERROR ================= */
 
-function showLoginError(message) {
+function showLoginError(
+    message
+) {
 
     const box =
         document.getElementById(
@@ -1411,7 +1733,9 @@ function showLoginError(message) {
 }
 
 
-function showRegisterError(message) {
+function showRegisterError(
+    message
+) {
 
     const box =
         document.getElementById(
@@ -1431,9 +1755,13 @@ function showRegisterError(message) {
 
 /* ================= FIREBASE ERROR ================= */
 
-function getFirebaseError(error) {
+function getFirebaseError(
+    error
+) {
 
-    switch (error.code) {
+    switch (
+        error.code
+    ) {
 
         case "auth/invalid-credential":
 
@@ -1465,6 +1793,11 @@ function getFirebaseError(error) {
             return "Password ต้องมีอย่างน้อย 6 ตัวอักษร";
 
 
+        case "auth/api-key-not-valid":
+
+            return "Firebase API Key ไม่ถูกต้อง";
+
+
         default:
 
             return error.message;
@@ -1476,29 +1809,49 @@ function getFirebaseError(error) {
 
 /* ================= GLOBAL ================= */
 
-window.login = login;
+window.login =
+    login;
 
-window.register = register;
 
-window.logout = logout;
+window.register =
+    register;
 
-window.showRegister = showRegister;
 
-window.showLogin = showLogin;
+window.logout =
+    logout;
 
-window.saveOT = saveOT;
+
+window.showRegister =
+    showRegister;
+
+
+window.showLogin =
+    showLogin;
+
+
+window.saveOT =
+    saveOT;
+
 
 window.deleteCurrentOT =
     deleteCurrentOT;
 
+
 window.previousMonth =
     previousMonth;
+
 
 window.nextMonth =
     nextMonth;
 
+
 window.showDashboard =
     showDashboard;
 
+
 window.showCalendar =
     showCalendar;
+
+
+window.applyDateRange =
+    applyDateRange;

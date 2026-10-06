@@ -24,7 +24,7 @@ import {
 
 const firebaseConfig = {
 
-    apiKey: "ใส่_API_KEY_ใหม่ตรงนี้",
+    apiKey: "AIzaSyCXDBm3WiI37D9gUEvt1crSAKbSOXwHWRk",
 
     authDomain:
         "my-ot-calendar.firebaseapp.com",
